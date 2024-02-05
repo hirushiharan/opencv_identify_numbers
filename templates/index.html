@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenCV Number Identification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .sliders {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .slider-label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .slider-value {
+            display: inline-block;
+            width: 40px;
+            font-weight: bold;
+        }
+
+        #video-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #input-video,
+        #output-video {
+            width: 45%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Adjust HSV Values</h2>
+
+    <form id="opencvForm">
+        <div class="sliders">
+            <label class="slider-label">Lower Hue (LH):</label>
+            <input type="range" id="lhSlider" name="lhValue" min="0" max="255" value="0">
+            <span id="lhValue" class="slider-value">0</span>
+            <br>
+
+            <label class="slider-label">Lower Saturation (LS):</label>
+            <input type="range" id="lsSlider" name="lsValue" min="0" max="255" value="0">
+            <span id="lsValue" class="slider-value">0</span>
+            <br>
+
+            <label class="slider-label">Lower Value (LV):</label>
+            <input type="range" id="lvSlider" name="lvValue" min="0" max="255" value="0">
+            <span id="lvValue" class="slider-value">0</span>
+            <br>
+
+            <label class="slider-label">Upper Hue (UH):</label>
+            <input type="range" id="uhSlider" name="uhValue" min="0" max="255" value="255">
+            <span id="uhValue" class="slider-value">255</span>
+            <br>
+
+            <label class="slider-label">Upper Saturation (US):</label>
+            <input type="range" id="usSlider" name="usValue" min="0" max="255" value="255">
+            <span id="usValue" class="slider-value">255</span>
+            <br>
+
+            <label class="slider-label">Upper Value (UV):</label>
+            <input type="range" id="uvSlider" name="uvValue" min="0" max="255" value="255">
+            <span id="uvValue" class="slider-value">255</span>
+            <br>
+        </div>
+
+        <button type="button" onclick="startOpenCV()">Number Recognition</button>
+    </form>
+
+    <div id="video-container">
+        <video id="input-video" autoplay></video>
+        <video id="output-video" autoplay></video>
+    </div>
+
+    <script>
+        function updateSliderValue(sliderId, valueId) {
+            var slider = document.getElementById(sliderId);
+            var value = document.getElementById(valueId);
+            value.textContent = slider.value;
+        }
+
+        function startOpenCV() {
+            var formData = new FormData(document.getElementById("opencvForm"));
+
+            fetch('/identify_numbers', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Update slider values when they are changed
+        document.getElementById("lhSlider").addEventListener("input", function () {
+            updateSliderValue("lhSlider", "lhValue");
+        });
+
+        document.getElementById("lsSlider").addEventListener("input", function () {
+            updateSliderValue("lsSlider", "lsValue");
+        });
+
+        document.getElementById("lvSlider").addEventListener("input", function () {
+            updateSliderValue("lvSlider", "lvValue");
+        });
+
+        document.getElementById("uhSlider").addEventListener("input", function () {
+            updateSliderValue("uhSlider", "uhValue");
+        });
+
+        document.getElementById("usSlider").addEventListener("input", function () {
+            updateSliderValue("usSlider", "usValue");
+        });
+
+        document.getElementById("uvSlider").addEventListener("input", function () {
+            updateSliderValue("uvSlider", "uvValue");
+        });
+
+        // Get access to the camera and display the video
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var inputVideo = document.getElementById("input-video");
+                inputVideo.srcObject = stream;
+
+                // Uncomment the following line if you want to mirror the input video
+                // inputVideo.style.transform = "scaleX(-1)";
+            })
+            .catch(function (error) {
+                console.error('Error accessing the camera:', error);
+            });
+    </script>
+
+</body>
+
+</html>

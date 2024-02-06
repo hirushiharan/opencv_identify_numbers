@@ -46,7 +46,7 @@ The frontend then displays both the input and processed video streams in separat
     python -m http.server
     ```
 
-Open a web browser and go to `http://localhost:8000` to access the application.
+7. Open a web browser and go to `http://localhost:8000` to access the application.
 
 6. Adjust the HSV values using the sliders as needed.
 

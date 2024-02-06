@@ -85,7 +85,7 @@
 
     <div id="video-container">
         <video id="input-video" autoplay></video>
-        <video id="output-video" autoplay></video>
+        <img id="output-image" alt="Processed Image">
     </div>
 
     <script>
@@ -98,13 +98,21 @@
         function startOpenCV() {
             var formData = new FormData(document.getElementById("opencvForm"));
 
-            fetch('/identify_numbers', {
+            console.log('Sending request with form data:', formData);
+
+            fetch('http://localhost:5000/identify_numbers', {
                 method: 'POST',
                 body: formData
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.message);
+                    console.log('Response received:', data);
+
+                    // Assuming the 'output-image' element is an img tag
+                    var outputImage = document.getElementById("output-image");
+
+                    // Set the 'src' attribute of the image element with the processed image data
+                    outputImage.src = 'data:image/jpeg;base64,' + data.results;
                 })
                 .catch(error => {
                     console.error('Error:', error);

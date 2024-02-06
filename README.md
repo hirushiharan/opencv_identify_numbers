@@ -38,7 +38,15 @@ The frontend then displays both the input and processed video streams in separat
     python app.py
     ```
 
-5. Open a web browser and go to `http://localhost:5000` to access the application.
+5. Navigate to the templates folder, where the index.html is available
+
+6. Run HTML frontend server
+
+    ```bash
+    python -m http.server
+    ```
+
+Open a web browser and go to `http://localhost:8000` to access the application.
 
 6. Adjust the HSV values using the sliders as needed.
 
